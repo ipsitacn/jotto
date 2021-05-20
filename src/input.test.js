@@ -8,12 +8,16 @@ import Input from './input';
  * 
  * @returns {ShallowWrapper}
  */
-const setup = () => {
-    return shallow(<Input />);
+const setup = (secretWord = 'party') => {
+    return shallow(<Input secretWord={secretWord} />);
 }
 
 test('Input renders without error', () => {
     const wrapper = setup();
     const inputComponent = findByTestArr(wrapper, 'component-input');
     expect(inputComponent.length).toBe(1);
+});
+
+test('does not throw error with expected props', () => {
+    checkProps(Input, { secretWord: 'party' })
 })
