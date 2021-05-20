@@ -20,4 +20,17 @@ test('Input renders without error', () => {
 
 test('does not throw error with expected props', () => {
     checkProps(Input, { secretWord: 'party' })
+});
+
+describe('state controlled input field', () => {
+    const mockSetCurrentGuess = jest.fn();
+    React.useState = jest.fn(() => ["", mockSetCurrentGuess]);
+
+    const wrapper = setup();
+    const inputBox = findByTestArr(wrapper, 'input-box');
+
+    const mockEvent = { target: { value: 'train' } };
+    inputBox.simulate("change", mockEvent);
+
+    expect(mockSetCurrentGuess).toHaveBeenCalledWith('train');
 })
