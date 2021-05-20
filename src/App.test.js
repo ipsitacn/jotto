@@ -1,12 +1,15 @@
 import { mount } from "enzyme";
-import { findByTestArr } from '../test/testUtils';
+import { findByTestArr, storeFactory } from '../test/testUtils';
 import App from "./App";
+import { Provider } from 'react-redux';
+
 
 jest.mock('./actions');
 import { getSecretWord as mockGetSecretWord } from './actions';
 
 const setup = () => {
-  return mount(<App />);
+  const store = storeFactory();
+  return mount(<Provider store={store}><App /></Provider>);
 }
 test("renders non-empty component without crashing", () => {
   const wrapper = setup();

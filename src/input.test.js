@@ -1,6 +1,7 @@
 import React from 'react';
-import { shallow } from "enzyme";
-import { findByTestArr, checkProps } from "../test/testUtils";
+import { mount } from "enzyme";
+import { findByTestArr, checkProps, storeFactory } from "../test/testUtils";
+import { Provider } from 'react-redux';
 
 import Input from './input';
 
@@ -15,14 +16,15 @@ jest.mock('react', () => ({
  * 
  * @returns {ShallowWrapper}
  */
-const setup = (success = false, secretWord = 'party') => {
-    return shallow(<Input success={success} secretWord={secretWord} />);
+const setup = (initialState = {}, secretWord = 'party') => {
+    const store = storeFactory(initialState);
+    return mount(<Provider store={store}><Input secretWord={secretWord} /></Provider>);
 }
 
 describe('renders', () => {
     describe('success is true', () => {
         let wrapper;
-        beforeEach(() => { wrapper = setup(true); });
+        beforeEach(() => { wrapper = setup({ success: true }); });
         test('Input renders without error', () => {
             const inputComponent = findByTestArr(wrapper, 'component-input');
             expect(inputComponent.length).toBe(1);
@@ -38,7 +40,7 @@ describe('renders', () => {
     });
     describe('success is false', () => {
         let wrapper;
-        beforeEach(() => { wrapper = setup(false); });
+        beforeEach(() => { wrapper = setup({ success: false }); });
         test('Input renders without error', () => {
             const inputComponent = findByTestArr(wrapper, 'component-input');
             expect(inputComponent.length).toBe(1);
@@ -62,7 +64,7 @@ test('does not throw error with expected props', () => {
 describe('state controlled input field', () => {
     let wrapper;
     beforeEach(() => {
-        wrapper = setup();
+        wrapper = setup({ success: false });
     })
 
     test('state updates with value of input button change', () => {
