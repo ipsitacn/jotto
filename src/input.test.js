@@ -4,6 +4,13 @@ import { findByTestArr, checkProps } from "../test/testUtils";
 
 import Input from './input';
 
+const mockSetCurrentGuess = jest.fn();
+
+jest.mock('react', () => ({
+    ...jest.requireActual('react'),
+    useState: (initialState) => [initialState, mockSetCurrentGuess]
+}))
+
 /**
  * 
  * @returns {ShallowWrapper}
@@ -23,8 +30,6 @@ test('does not throw error with expected props', () => {
 });
 
 describe('state controlled input field', () => {
-    const mockSetCurrentGuess = jest.fn();
-    React.useState = jest.fn(() => ["", mockSetCurrentGuess]);
 
     const wrapper = setup();
     const inputBox = findByTestArr(wrapper, 'input-box');
