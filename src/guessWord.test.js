@@ -1,11 +1,19 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import { Provider } from 'react-redux';
 
 import App from './App';
-import { findByTestArr } from '../test/testUtils';
+import { findByTestArr, storeFactory } from '../test/testUtils';
 
-const setup = (state = {}) => {
-    const wrapper = mount(<App />);
+
+jest.mock('./actions');
+
+
+const setup = (initialState = {}) => {
+    const store = storeFactory(initialState);
+    const wrapper = mount(<Provider store={store}><App /></Provider>);
+
+
     const inputBox = findByTestArr(wrapper, 'input-box');
     inputBox.simulate('change', { target: { value: 'train' } });
 
@@ -15,7 +23,7 @@ const setup = (state = {}) => {
     return wrapper;
 }
 
-describe.skip('no words guessed', () => {
+describe('no words guessed', () => {
     let wrapper;
     beforeEach(() => {
         wrapper = setup({
